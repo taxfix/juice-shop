@@ -10,6 +10,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   PROJECT_NAME: "taxfix-central"
+  CI_REGISTRY_IMAGE: "eu.gcr.io"
 
 stages:
   - build
