@@ -6,7 +6,10 @@
 variables:
   SAST_EXCLUDED_PATHS: "frontend/src/assets/private/**"
   DOCKER_DRIVER: overlay2
+  REGISTRY_URL: "eu.gcr.io"
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
+  PROJECT_NAME: "taxfix-central"
 
 stages:
   - build
