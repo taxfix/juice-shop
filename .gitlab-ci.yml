@@ -63,8 +63,6 @@ include:
 container_scanning:
   image: eu.gcr.io/taxfix-central/gitlab/container-scanning:1
   variables:
-    CI_APPLICATION_REPOSITORY: dockerhub.com/literature-services/development/security-scanning/master
-    CI_APPLICATION_TAG: latest
     CLAIR_OUTPUT: High
     KLAR_TRACE: "true"
     CLAIR_TRACE: "true"
