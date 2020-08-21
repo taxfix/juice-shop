@@ -16,14 +16,7 @@ stages:
   - build
   - test
 
-build:
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  stage: build
-  image: eu.gcr.io/taxfix-central/devops-tools:latest
-  services:
-    - docker:19.03.5-dind
-  script:
+before_script:
     - mkdir -p ./creds
     - echo $SERVICEACCOUNT | base64 -d > ./creds/sa.json
     - gcloud auth activate-service-account --key-file=./creds/sa.json --project=$PROJECT_NAME
@@ -41,6 +34,16 @@ build:
     - export IMAGE_TAG=$IMAGE_TAG
     - export REGISTRY_IMAGE=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:$IMAGE_TAG
     - export REGISTRY_IMAGE_LATEST=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:latest 
+
+build:
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: build
+  image: eu.gcr.io/taxfix-central/devops-tools:latest
+  services:
+    - docker:19.03.5-dind
+  script:
+    
     - | 
         if [ -z "$BUILD_SCRIPT" ]
         then
