@@ -6,6 +6,7 @@
 variables:
   SAST_EXCLUDED_PATHS: "frontend/src/assets/private/**"
   DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
 stages:
   - build
