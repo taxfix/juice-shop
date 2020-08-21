@@ -13,7 +13,7 @@ variables:
   CI_REGISTRY_IMAGE: "eu.gcr.io/taxfix-central/gitlab-security"
 
 stages:
-  - build
+  #- build
   - test
 
 before_script:
@@ -37,24 +37,24 @@ before_script:
     - export DOCKER_IMAGE=${REGISTRY_IMAGE}
 
 
-build:
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  stage: build
-  image: eu.gcr.io/taxfix-central/devops-tools:latest
-  services:
-    - docker:19.03.5-dind
-  script:
+# build:
+#   variables:
+#     DOCKER_TLS_CERTDIR: ""
+#   stage: build
+#   image: eu.gcr.io/taxfix-central/devops-tools:latest
+#   services:
+#     - docker:19.03.5-dind
+#   script:
     
-    - | 
-        if [ -z "$BUILD_SCRIPT" ]
-        then
-              echo "\$BUILD_SCRIPT is empty"
-              docker build  -t $REGISTRY_IMAGE --build-arg NPM_TOKEN=$NPM_TOKEN  .
-        else
-              echo "\$BUILD_SCRIPT is NOT empty"
-              bash $BUILD_SCRIPT
-        fi
+#     - | 
+#         if [ -z "$BUILD_SCRIPT" ]
+#         then
+#               echo "\$BUILD_SCRIPT is empty"
+#               docker build  -t $REGISTRY_IMAGE --build-arg NPM_TOKEN=$NPM_TOKEN  .
+#         else
+#               echo "\$BUILD_SCRIPT is NOT empty"
+#               bash $BUILD_SCRIPT
+#         fi
     
 
 
@@ -62,5 +62,12 @@ include:
   - template: Container-Scanning.gitlab-ci.yml  
 container_scanning:
   image: eu.gcr.io/taxfix-central/gitlab/container-scanning:1
+  variables:
+    CI_APPLICATION_REPOSITORY: dockerhub.com/literature-services/development/security-scanning/master
+    CI_APPLICATION_TAG: latest
+    CLAIR_OUTPUT: High
+    KLAR_TRACE: "true"
+    CLAIR_TRACE: "true"
+
 
   # test2
