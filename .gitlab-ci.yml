@@ -34,6 +34,8 @@ before_script:
     - export IMAGE_TAG=$IMAGE_TAG
     - export REGISTRY_IMAGE=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:$IMAGE_TAG
     - export REGISTRY_IMAGE_LATEST=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:latest 
+    - export DOCKER_IMAGE=${REGISTRY_IMAGE}
+
 
 build:
   variables:
