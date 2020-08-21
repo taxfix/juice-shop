@@ -1,11 +1,30 @@
-include:
-  - project: 'devops/devops-tools'
-    ref: security
-    file: '/templates/.gitlab-ci-template.yml'
+# include:
+#   - project: 'devops/devops-tools'
+#     ref: security
+#     file: '/templates/.gitlab-ci-template.yml'
 
 variables:
   SAST_EXCLUDED_PATHS: "frontend/src/assets/private/**"
-  CI_IS_DEPLOY_OLD: "true"
-  IMAGE_TAG: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - build
+  - test
+
+build:
+  image: docker:stable
+  stage: build
+  services:
+    - docker:19.03.12-dind
+  variables:
+    IMAGE: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
+  script:
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $IMAGE .
+    - docker push $IMAGE
+
+include:
+  - template: Container-Scanning.gitlab-ci.yml  
   
   # test
