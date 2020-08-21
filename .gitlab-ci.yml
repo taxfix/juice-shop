@@ -40,23 +40,6 @@ build:
     - export IMAGE_TAG=$IMAGE_TAG
     - export REGISTRY_IMAGE=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:$IMAGE_TAG
     - export REGISTRY_IMAGE_LATEST=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:latest 
-    - mkdir -p ./creds
-    - echo $SERVICEACCOUNT | base64 -d > ./creds/sa.json
-    - gcloud auth activate-service-account --key-file=./creds/sa.json --project=$PROJECT_NAME
-    - gcloud auth configure-docker
-    - |
-          echo " Release tag -  $CI_COMMIT_TAG"
-          CI_COMMIT_TAG=${CI_COMMIT_TAG/v/} 
-          export RELEASE_VERSION=$CI_COMMIT_TAG
-          if [ -z "$RELEASE_VERSION" ]
-          then
-            IMAGE_TAG=sha.${CI_COMMIT_SHA}
-          else
-            IMAGE_TAG=$RELEASE_VERSION-sha.${CI_COMMIT_SHA}
-          fi
-    - export IMAGE_TAG=$IMAGE_TAG
-    - export REGISTRY_IMAGE=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:$IMAGE_TAG
-    - export REGISTRY_IMAGE_LATEST=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:latest 
     - | 
         if [ -z "$BUILD_SCRIPT" ]
         then
@@ -68,7 +51,11 @@ build:
         fi
     
 
+
 include:
   - template: Container-Scanning.gitlab-ci.yml  
-  
+container_scanning:
+  variables:
+    GIT_STRATEGY: fetch        
+
   # test2
