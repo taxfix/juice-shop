@@ -56,7 +56,7 @@ build:
 include:
   - template: Container-Scanning.gitlab-ci.yml  
 container_scanning:
-  image: eu.gcr.io/taxfix-central/devops-tools:latest
+  image: eu.gcr.io/taxfix-central/gitlab/container-scanning:1
   variables:
     GIT_STRATEGY: fetch        
 
