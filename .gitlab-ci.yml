@@ -23,8 +23,7 @@ before_script:
     - mkdir -p ./creds
     - echo $SERVICEACCOUNT | base64 -d > ./creds/sa.json
     - gcloud auth activate-service-account --key-file=./creds/sa.json --project=$PROJECT_NAME
-    #- which docker-credential-gcloud
-    #- gcloud components install docker-credential-gcr --quiet
+    - gcloud components install docker-credential-gcr --quiet
     - ln -s /root/google-cloud-sdk/bin/docker-credential-gcloud /usr/bin/
     - gcloud auth configure-docker --quiet
     - |
@@ -72,6 +71,8 @@ container_scanning:
     KLAR_TRACE: "true"
     CLAIR_TRACE: "true"
     DOCKER_TLS_CERTDIR: ""
+    DOCKER_USER: ""
+    DOCKER_PASSSWORD: ""
   services:
     - docker:19.03.5-dind
     - name: $CLAIR_DB_IMAGE
