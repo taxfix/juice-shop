@@ -67,6 +67,8 @@ container_scanning:
     KLAR_TRACE: "true"
     CLAIR_TRACE: "true"
     DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:19.03.5-dind
 
 
   # test2
