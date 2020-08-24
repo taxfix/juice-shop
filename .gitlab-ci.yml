@@ -30,7 +30,7 @@ build:
   script:
     - docker info
     - docker build -t $IMAGE .
-    - docker push $IMAGE
+    
 
 container_scanning:
   stage: test
