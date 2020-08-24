@@ -73,6 +73,9 @@ container_scanning:
     DOCKER_TLS_CERTDIR: ""
   services:
     - docker:19.03.5-dind
+    - name: $CLAIR_DB_IMAGE
+      alias: clair-vulnerabilities-db
+
   environment:
     name: integration
   
