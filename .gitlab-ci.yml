@@ -13,7 +13,7 @@ variables:
   # CI_REGISTRY_IMAGE: "eu.gcr.io/taxfix-central/gitlab-security"
 
 stages:
-  #- build
+  - build
   - test
 
 before_script:
@@ -45,7 +45,6 @@ build:
   services:
     - docker:19.03.5-dind
   script:
-    
     - | 
         if [ -z "$BUILD_SCRIPT" ]
         then
