@@ -12,31 +12,74 @@ variables:
   PROJECT_NAME: "taxfix-central"
   # CI_REGISTRY_IMAGE: "eu.gcr.io/taxfix-central/gitlab-security"
 
-include:
-  - template: Container-Scanning.gitlab-ci.yml
-
-stages:
-  - build
-  - test
-
 services:
   - docker:19.03.5-dind
 
+stages:
+  #- build
+  - test
+
+before_script:
+    - mkdir -p ./creds
+    - echo $SERVICEACCOUNT | base64 -d > ./creds/sa.json
+    - gcloud auth activate-service-account --key-file=./creds/sa.json --project=$PROJECT_NAME
+    #- which docker-credential-gcloud
+    #- gcloud components install docker-credential-gcr --quiet
+    - ln -s /root/google-cloud-sdk/bin/docker-credential-gcloud /usr/bin/
+    - gcloud auth configure-docker --quiet
+    - |
+          echo " Release tag -  $CI_COMMIT_TAG"
+          CI_COMMIT_TAG=${CI_COMMIT_TAG/v/} 
+          export RELEASE_VERSION=$CI_COMMIT_TAG
+          if [ -z "$RELEASE_VERSION" ]
+          then
+            IMAGE_TAG=sha.${CI_COMMIT_SHA}
+          else
+            IMAGE_TAG=$RELEASE_VERSION-sha.${CI_COMMIT_SHA}
+          fi
+    - export IMAGE_TAG=$IMAGE_TAG
+    - export REGISTRY_IMAGE=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:$IMAGE_TAG
+    - export REGISTRY_IMAGE_LATEST=${REGISTRY_URL}/$PROJECT_NAME/${CI_PROJECT_NAME}:latest 
+    - export DOCKER_IMAGE=$REGISTRY_IMAGE_LATEST
+
+
 build:
-  image: docker:stable
-  stage: build
   variables:
-    IMAGE: eu.gcr.io/taxfix-central/devops-tools:latest
+    DOCKER_TLS_CERTDIR: ""
+  stage: build
+  image: eu.gcr.io/taxfix-central/gitlab/container-scanning:1
+  services:
+    - docker:19.03.5-dind
   script:
-    - docker info
-    - docker build -t $IMAGE .
+    - | 
+        if [ -z "$BUILD_SCRIPT" ]
+        then
+              echo "\$BUILD_SCRIPT is empty"
+              docker build  -t $REGISTRY_IMAGE --build-arg NPM_TOKEN=$NPM_TOKEN  .
+        else
+              echo "\$BUILD_SCRIPT is NOT empty"
+              bash $BUILD_SCRIPT
+        fi
     
 
+
+include:
+  - template: Container-Scanning.gitlab-ci.yml  
 container_scanning:
-  stage: test
-  image: registry.gitlab.com/gitlab-org/security-products/analyzers/klar:2.4.1
+  image: eu.gcr.io/taxfix-central/gitlab/container-scanning:1
   variables:
-    DOCKER_IMAGE: registry.gitlab.com/gitlab-org/security-products/analyzers/klar:2.4.1
-  artifacts:
-    paths:
-      - gl-container-scanning-report.json
+    CLAIR_OUTPUT: High
+    KLAR_TRACE: "true"
+    CLAIR_TRACE: "true"
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:19.03.5-dind
+    - name: $CLAIR_DB_IMAGE
+      alias: clair-vulnerabilities-db
+
+  environment:
+    name: integration
+  
+
+
+  # test2
