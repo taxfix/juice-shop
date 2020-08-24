@@ -13,7 +13,7 @@ variables:
   # CI_REGISTRY_IMAGE: "eu.gcr.io/taxfix-central/gitlab-security"
 
 services:
-    - docker:19.03.5-dind
+  - docker:19.03.5-dind
 
 stages:
   - build
@@ -71,6 +71,8 @@ container_scanning:
     KLAR_TRACE: "true"
     CLAIR_TRACE: "true"
     DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:19.03.5-dind
   
 
 
