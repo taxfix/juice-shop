@@ -25,6 +25,7 @@ before_script:
     - gcloud auth activate-service-account --key-file=./creds/sa.json --project=$PROJECT_NAME
     #- which docker-credential-gcloud
     #- gcloud components install docker-credential-gcr --quiet
+    - ln -s /root/google-cloud-sdk/bin/docker-credential-gcloud /usr/bin/
     - gcloud auth configure-docker --quiet
     - |
           echo " Release tag -  $CI_COMMIT_TAG"
