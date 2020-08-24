@@ -16,7 +16,7 @@ services:
   - docker:19.03.5-dind
 
 stages:
-  #- build
+  - build
   - test
 
 before_script:
