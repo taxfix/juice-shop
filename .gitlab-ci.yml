@@ -66,6 +66,7 @@ container_scanning:
     CLAIR_OUTPUT: High
     KLAR_TRACE: "true"
     CLAIR_TRACE: "true"
+    DOCKER_TLS_CERTDIR: ""
 
 
   # test2
