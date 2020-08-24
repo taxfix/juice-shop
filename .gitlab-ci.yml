@@ -36,6 +36,8 @@ build:
 container_scanning:
   stage: test
   image: registry.gitlab.com/gitlab-org/security-products/analyzers/klar:2.4.1
+  variables:
+    DOCKER_IMAGE: registry.gitlab.com/gitlab-org/security-products/analyzers/klar:2.4.1
   artifacts:
     paths:
       - gl-container-scanning-report.json
