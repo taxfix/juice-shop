@@ -20,6 +20,8 @@ before_script:
     - mkdir -p ./creds
     - echo $SERVICEACCOUNT | base64 -d > ./creds/sa.json
     - gcloud auth activate-service-account --key-file=./creds/sa.json --project=$PROJECT_NAME
+    - which docker 
+    - which docker-credential-gcloud
     - gcloud components install docker-credential-gcr
     - gcloud auth configure-docker
     - |
