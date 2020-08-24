@@ -47,7 +47,7 @@ build:
   variables:
     DOCKER_TLS_CERTDIR: ""
   stage: build
-  image: eu.gcr.io/taxfix-central/gitlab/container-scanning:1
+  image: eu.gcr.io/taxfix-central/gitlab/container-scanning:2
   services:
     - docker:19.03.5-dind
   script:
@@ -66,7 +66,7 @@ build:
 include:
   - template: Container-Scanning.gitlab-ci.yml  
 container_scanning:
-  image: eu.gcr.io/taxfix-central/gitlab/container-scanning:1
+  image: eu.gcr.io/taxfix-central/gitlab/container-scanning:2
   variables:
     CLAIR_OUTPUT: High
     KLAR_TRACE: "true"
