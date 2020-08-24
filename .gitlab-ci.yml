@@ -37,23 +37,23 @@ before_script:
     - export DOCKER_IMAGE=$REGISTRY_IMAGE_LATEST
 
 
-build:
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  stage: build
-  image: eu.gcr.io/taxfix-central/devops-tools:latest
-  services:
-    - docker:19.03.5-dind
-  script:
-    - | 
-        if [ -z "$BUILD_SCRIPT" ]
-        then
-              echo "\$BUILD_SCRIPT is empty"
-              docker build  -t $REGISTRY_IMAGE --build-arg NPM_TOKEN=$NPM_TOKEN  .
-        else
-              echo "\$BUILD_SCRIPT is NOT empty"
-              bash $BUILD_SCRIPT
-        fi
+# build:
+#   variables:
+#     DOCKER_TLS_CERTDIR: ""
+#   stage: build
+#   image: eu.gcr.io/taxfix-central/devops-tools:latest
+#   services:
+#     - docker:19.03.5-dind
+#   script:
+#     - | 
+#         if [ -z "$BUILD_SCRIPT" ]
+#         then
+#               echo "\$BUILD_SCRIPT is empty"
+#               docker build  -t $REGISTRY_IMAGE --build-arg NPM_TOKEN=$NPM_TOKEN  .
+#         else
+#               echo "\$BUILD_SCRIPT is NOT empty"
+#               bash $BUILD_SCRIPT
+#         fi
     
 
 
@@ -66,8 +66,8 @@ container_scanning:
     KLAR_TRACE: "true"
     CLAIR_TRACE: "true"
     DOCKER_TLS_CERTDIR: ""
-  services:
-    - docker:19.03.5-dind
+  # services:
+  #   - docker:19.03.5-dind
 
 
   # test2
